@@ -1,12 +1,8 @@
 require("dotenv").config();
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize(
-	process.env.DATABASE_URL ||
-		`postgresql://postgres:${process.env.PASS}@localhost/mario-blue-badge`,
-	{
-		dialect: "postgres",
-	}
-);
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+	dialect: "postgres",
+});
 
 sequelize.authenticate().then(
 	function () {
@@ -18,13 +14,13 @@ sequelize.authenticate().then(
 );
 
 User = sequelize.import("./models/user");
-List = sequelize.import("./models/list");
+//List = sequelize.import("./models/list");
 Task = sequelize.import("./models/task");
 
-List.belongsTo(User);
-User.hasMany(List);
+/* List.belongsTo(User);
+User.hasMany(List); */
 
-Task.belongsTo(List);
-List.hasMany(Task);
+Task.belongsTo(User);
+User.hasMany(Task);
 
 module.exports = sequelize;

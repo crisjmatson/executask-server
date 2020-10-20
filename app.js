@@ -13,7 +13,7 @@ app.use(require("./middleware/headers"));
 app.use(express.json());
 
 app.use("/user", user);
-app.use("/list", list);
+//app.use("/list", list);
 app.use("/task", task);
 
 app.listen(process.env.PORT, function () {

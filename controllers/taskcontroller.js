@@ -5,8 +5,8 @@ let validateSession = require("../middleware/validate-session");
 
 router.post("/", validateSession, function (req, res) {
 	Task.create({
+		//listId: req.body.task.list_id,
 		userId: req.user.id,
-		listId: req.body.task.list_id,
 		title: req.body.task.title,
 		description: req.body.task.description,
 		complete: req.body.task.complete,
@@ -21,125 +21,35 @@ router.post("/", validateSession, function (req, res) {
 		})
 		.catch((err) => res.status(500).send({ error: err }));
 });
-/* 
 router.get("/yours", validateSession, function (req, res) {
-	// USER SPECIFIC POST ACCESS
-	Post.findAll({
+	// ??  USER SPECIFIC TASK ACCESS
+	Task.findAll({
 		where: { userId: req.user.id },
 	})
-		.then(function postDisplayYours(posts) {
-			if (posts) {
-				res.status(200).json({ posts: posts });
+		.then(function postDisplayYours(tasks) {
+			if (tasks) {
+				res.status(200).json({ tasks: tasks });
 			} else {
-				res.status(500).json({ error: "No posts found." });
+				res.status(500).json({ error: "No tasks found." });
 			}
 		})
 		.catch((err) => res.status(500).send({ error: err }));
 });
 
-router.get("/public", function (req, res) {
-	// NON-USER ACCESS TO ALL PUBLIC POSTS
-	Post.findAll({ where: { private: false } })
-		.then(function postDisplayPublic(posts) {
-			if (posts) {
-				res.status(200).json({ posts: posts });
-			} else {
-				res.status(500).json({ error: "No public posts found." });
-			}
-		})
-		.catch((err) => res.status(500).send({ error: err }));
-});
-
-router.get("/all", validateSession, function (req, res) {
-	// USER ACCESS TO ALL POSTS
-	Post.findAll()
-		.then(function postDisplayAll(posts) {
-			if (posts) {
-				res.status(200).json({ posts: posts });
-			} else {
-				res.status(500).json({ error: "No posts found." });
-			}
-		})
-		.catch((err) => res.status(500).send({ error: err }));
-});
-
-router.get("/full", validateSession, function (req, res) {
-	// USER ACCESS TO SINGLE POST AND ALL COMMENTS
-	Post.findOne({ where: { id: req.body.post.id } })
-		.then(function postDisplay(post) {
-			if (post) {
-				Comment.findAll({ where: { postId: req.body.post.id } }).then(
-					function commentDisplay(comments) {
-						if (comments) {
-							res.status(200).json({ post: post, comments: comments });
-						} else {
-							res.status(500).json({ comments: "No comments found." });
-						}
-					}
-				);
-			} else {
-				res.status(500).json({ error: "Post not found." });
-			}
-		})
-		.catch((err) => res.status(500).send({ error: err }));
-});
-
-router.get("/public_full", function (req, res) {
-	// GUEST ACCESS TO SINGLE POST AND ALL COMMENTS
-	Post.findOne({ where: { id: req.body.post.id, private: false } })
-		.then(function postDisplay(post) {
-			if (post) {
-				Comment.findAll({
-					where: { postId: req.body.post.id, private: false },
-				}).then(function commentDisplay(comments) {
-					if (comments) {
-						res.status(200).json({ post: post, comments: comments });
-					} else {
-						res.status(500).json({ comments: "No comments found." });
-					}
-				});
-			} else {
-				res.status(500).json({ error: "Post not found." });
-			}
-		})
-		.catch((err) => res.status(500).send({ error: err }));
-});
-router.get("/full", validateSession, function (req, res) {
-	// USER ACCESS TO SINGLE POST AND ALL COMMENTS
-	Post.findOne({ where: { id: req.body.post.id } })
-		.then(function postDisplay(post) {
-			//res.send({ post: post });
-			if (post) {
-				Comment.findAll({ where: { postId: req.body.post.id } }).then(
-					function commentDisplay(comments) {
-						if (comments) {
-							res.status(200).json({ post: post, comments: comments });
-						} else {
-							res.status(500).json({ comments: "No comments found." });
-						}
-					}
-				);
-			} else {
-				res.status(500).json({ error: "Post not found." });
-			}
-		})
-		.catch((err) => res.status(500).send({ error: err }));
-});
-
-router.put("/update", validateSession, function (req, res) {
-	// USER ACCESS TO UPDATE OWN POSTS
-	const updatePost = {
-		//adding post ID in postman for testing- add in client selection
-		title: req.body.post.title,
-		body: req.body.post.body,
-		tags: req.body.post.tags,
-		private: req.body.post.private,
-		edited: true,
+router.put("/update/:id", validateSession, function (req, res) {
+	// USER ACCESS TO UPDATE TASKS
+	let updateTask = {
+		title: req.body.task.title,
+		description: req.body.task.description,
+		complete: req.body.task.complete,
+		time_estimate: req.body.task.time_estimate,
+		due: req.body.task.due,
 	};
-	const query = { where: { postId: req.body.post.id, userId: req.user.id } };
-	Post.update(updatePost, query)
-		.then(function updatedPosts(posts) {
-			if (posts === 1) {
+	const query = { where: { id: req.params.id } };
+
+	Task.update(updateTask, query)
+		.then(function updatedTask(task) {
+			if (task[0] === 1) {
 				res.status(200).json({ message: "Update successful" });
 			} else {
 				res.status(500).json({ error: "Update not allowed." });
@@ -148,6 +58,7 @@ router.put("/update", validateSession, function (req, res) {
 		.catch((err) => res.status(500).send({ error: err }));
 });
 
+/* 
 router.delete("/delete", validateSession, function (req, res) {
 	const query = { where: { postId: req.body.post.id, userId: req.user.id } };
 	Post.destroy(query)
