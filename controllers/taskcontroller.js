@@ -58,12 +58,11 @@ router.put("/update/:id", validateSession, function (req, res) {
 		.catch((err) => res.status(500).send({ error: err }));
 });
 
-/* 
-router.delete("/delete", validateSession, function (req, res) {
-	const query = { where: { postId: req.body.post.id, userId: req.user.id } };
-	Post.destroy(query)
-		.then(function deletedPosts(deleted) {
-			if (deleted === 0) {
+router.delete("/delete/:id", validateSession, function (req, res) {
+	const query = { where: { id: req.params.id, userId: req.user.id } };
+	Task.destroy(query)
+		.then(function deletedTask(deleted) {
+			if (deleted[0] === 0) {
 				res.status(500).json({ error: "Delete not allowed." });
 			} else {
 				res.status(200).json({ message: "Delete successful" });
@@ -72,6 +71,7 @@ router.delete("/delete", validateSession, function (req, res) {
 		.catch((err) => res.status(500).send({ error: err }));
 });
 
+/* 
 
 router.get("/admin_view", validateAdmin, function (req, res) {
 	// ADMIN GET ALL POSTS
