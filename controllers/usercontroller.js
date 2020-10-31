@@ -88,6 +88,20 @@ router.put("/edit", validateSession, function (req, res) {
 		.catch((err) => res.status(500).send({ error: err }));
 });
 
+/* router.put("/taskcount", validateSession, function (req, res) {
+	/* const updateTaskCount = {
+		taskCount: req.body.user.count,
+	}; 
+	const query = { where: { id: req.user.id } };
+	User.findOne({
+		where: { id: req.user.id },
+	}).then((response) => res.status(200).json(response));
+	//.then((user) => User.update(user.taskCount + 1, query))
+	/* User.update(updateTaskCount, query)
+		.then((users) => res.status(200).json(users))
+		.catch((err) => res.status(500).send({ error: err })); 
+}); */
+
 router.delete("/delete", validateSession, function (req, res) {
 	const query = { where: { id: req.user.id } };
 	User.destroy(query)
