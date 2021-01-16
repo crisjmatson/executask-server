@@ -4,19 +4,6 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		description: {
-			type: DataTypes.STRING,
-			allowNull: true,
-		},
-		complete: {
-			type: DataTypes.BOOLEAN,
-			allowNull: true,
-			defaultValue: false,
-		},
-		due: {
-			type: DataTypes.DATE,
-			allowNull: true,
-		},
 	});
 	return List;
 };

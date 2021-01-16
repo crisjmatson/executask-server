@@ -17,8 +17,8 @@ User = sequelize.import("./models/user");
 //List = sequelize.import("./models/list");
 Task = sequelize.import("./models/task");
 
-/* List.belongsTo(User);
-User.hasMany(List); */
+//List.belongsTo(User);
+//User.hasMany(List);
 
 Task.belongsTo(User);
 User.hasMany(Task);

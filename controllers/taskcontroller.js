@@ -5,8 +5,8 @@ let validateSession = require("../middleware/validate-session");
 
 router.post("/", validateSession, function (req, res) {
 	Task.create({
-		//listId: req.body.task.list_id,
 		userId: req.user.id,
+		/* listId: req.body.task.listId, */
 		title: req.body.task.title,
 		description: req.body.task.description,
 		complete: req.body.task.complete,
